@@ -1,3 +1,6 @@
 {
-  "extends": ["react-app", "eslint-config-x0k"]
+  "extends": ["react-app", "eslint-config-x0k"],
+  "globals": {
+    "gapi": true
+  }
 }

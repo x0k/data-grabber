@@ -92,7 +92,7 @@ class App extends Component {
 
   constructor (props) {
     super(props);
-    api.onLoad = api.onStatusUpdate = this._userUpdate;
+    api.onStatusUpdate = this._userUpdate;
   }
 
   authHandler = () => {

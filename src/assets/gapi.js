@@ -9,7 +9,6 @@ class API {
 
   #gapi;
   #googleAuth;
-  #onLoad = null;
   #isAuthorized = false;
   #onStatusUpdate = null;
 
@@ -24,16 +23,11 @@ class API {
       this.#googleAuth = this.#gapi.auth2.getAuthInstance();
       this.#googleAuth.isSignedIn.listen(this.#satusUpdate);
       this.#satusUpdate(this.#googleAuth.isSignedIn.get());
-      return this.#googleAuth.isSignedIn.get();
     };
     let load = () => {
       this.#gapi.client
         .init(data)
-        .then(setAuth)
-        .then(status => {
-          if (this.#onLoad)
-            this.#onLoad(status);
-        });
+        .then(setAuth);
     };
     let init = () => {
       this.#gapi = window.gapi;
@@ -77,10 +71,6 @@ class API {
         }
       });
     });
-  }
-
-  set onLoad (val) {
-    this.#onLoad = val;
   }
 
   set onStatusUpdate (val) {

@@ -31,7 +31,7 @@ const styles = theme => ({
     padding: 20
   },
   button: {
-    margin: 0,
+    marginRight: 20,
   },
   icon: {
     fontSize: 26,
@@ -167,10 +167,10 @@ class App extends Component {
               />
             </div>
             <div className={classes.container}>
-              <Button color="primary" className={classes.button} onClick={this.runHandler} >
+              <Button variant="outlined" color="primary" className={classes.button} onClick={this.runHandler} disabled={!user}>
                 Run
               </Button>
-              <Button className={classes.button} onClick={this.addParameterHandler} >
+              <Button variant="outlined" className={classes.button} onClick={this.addParameterHandler} disabled={!user}>
                 Add
               </Button>
             </div>

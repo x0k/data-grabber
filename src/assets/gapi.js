@@ -12,7 +12,6 @@ class API {
   #onLoad = null;
   #isAuthorized = false;
   #onStatusUpdate = null;
-  #scriptId = 'M1qUJ-bECOgm4Y9z9evwE5gNpR_a-QLCI';
 
   #satusUpdate = status => {
     this.#isAuthorized = status;
@@ -24,6 +23,7 @@ class API {
     let setAuth = () => {
       this.#googleAuth = this.#gapi.auth2.getAuthInstance();
       this.#googleAuth.isSignedIn.listen(this.#satusUpdate);
+      this.#satusUpdate(this.#googleAuth.isSignedIn.get());
       return this.#googleAuth.isSignedIn.get();
     };
     let load = () => {
@@ -47,8 +47,9 @@ class API {
   }
 
   authorize () {
-    if (this.#isAuthorized)
+    if (this.#isAuthorized) {
       return this.#googleAuth.signOut();
+    }
     return this.#googleAuth.signIn();
   }
 
@@ -60,7 +61,7 @@ class API {
     };
     let request = this.#gapi.client.request({
       'root': 'https://script.googleapis.com',
-      'path': `v1/scripts/${this.#scriptId}:run`,
+      'path': 'v1/scripts/M1qUJ-bECOgm4Y9z9evwE5gNpR_a-QLCI:run',
       'method': 'POST',
       'body': data
     });

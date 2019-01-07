@@ -7,44 +7,37 @@ const data = {
 
 class API {
 
-  gapi;
-  googleAuth;
-  isAuthorized = false;
-  onStatusUpdate = null;
-  user = null;
-  onUserUpdate = null;
-  scriptId = 'M1qUJ-bECOgm4Y9z9evwE5gNpR_a-QLCI';
+  #gapi;
+  #googleAuth;
+  #onLoad = null;
+  #isAuthorized = false;
+  #onStatusUpdate = null;
+  #scriptId = 'M1qUJ-bECOgm4Y9z9evwE5gNpR_a-QLCI';
 
-  _satusUpdate = status => {
-    this.isAuthorized = status;
-    if (this.onStatusUpdate)
-      this.onStatusUpdate(status);
+  #satusUpdate = status => {
+    this.#isAuthorized = status;
+    if (this.#onStatusUpdate)
+      this.#onStatusUpdate(status);
   }
-
-  _userUpdate = user => {
-    this.user = user;
-    if (this.onUserUpdate)
-      this.onUserUpdate(this.user);
-  };
 
   constructor (data) {
     let setAuth = () => {
-      this.googleAuth = this.gapi.auth2.getAuthInstance();
-      this.googleAuth.isSignedIn.listen(this._satusUpdate);
-      this.googleAuth.currentUser.listen(this._userUpdate);
-      this._satusUpdate(this.googleAuth.isSignedIn.get());
-      if (this.isAuthorized) {
-        this._userUpdate(this.googleAuth.currentUser.get());
-      }
+      this.#googleAuth = this.#gapi.auth2.getAuthInstance();
+      this.#googleAuth.isSignedIn.listen(this.#satusUpdate);
+      return this.#googleAuth.isSignedIn.get();
     };
     let load = () => {
-      this.gapi.client
+      this.#gapi.client
         .init(data)
-        .then(setAuth);
+        .then(setAuth)
+        .then(status => {
+          if (this.#onLoad)
+            this.#onLoad(status);
+        });
     };
     let init = () => {
-      this.gapi = window.gapi;
-      this.gapi.load('client:auth2', load);
+      this.#gapi = window.gapi;
+      this.#gapi.load('client:auth2', load);
     };
     if (window.gapi) {
       init();
@@ -54,11 +47,9 @@ class API {
   }
 
   authorize () {
-    if (this.isAuthorized) {
-      return this.googleAuth.signOut();
-    } else {
-      return this.googleAuth.signIn();
-    }
+    if (this.#isAuthorized)
+      return this.#googleAuth.signOut();
+    return this.#googleAuth.signIn();
   }
 
   fetch (url) {
@@ -67,9 +58,9 @@ class API {
       'parameters': [ url ],
       'devMode': true
     };
-    let request = this.gapi.client.request({
+    let request = this.#gapi.client.request({
       'root': 'https://script.googleapis.com',
-      'path': `v1/scripts/${this.scriptId}:run`,
+      'path': `v1/scripts/${this.#scriptId}:run`,
       'method': 'POST',
       'body': data
     });
@@ -85,6 +76,18 @@ class API {
         }
       });
     });
+  }
+
+  set onLoad (val) {
+    this.#onLoad = val;
+  }
+
+  set onStatusUpdate (val) {
+    this.#onStatusUpdate = val;
+  }
+
+  get user () {
+    return this.#googleAuth.currentUser.get();
   }
 
 }

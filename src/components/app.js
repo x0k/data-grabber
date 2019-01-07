@@ -6,7 +6,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -42,8 +41,8 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center'
   },
-  paper: {
-    padding: 20
+  grid: {
+    
   }
 });
 
@@ -82,17 +81,22 @@ class App extends Component {
     ],
     resultString: 'Title: %Title%',
     result: '',
-    user: api.user,
+    user: null,
   };
+
+  _userUpdate = status => {
+    this.setState({
+      user: status ? api.user : null
+    });
+  }
 
   constructor (props) {
     super(props);
-    api.onUserUpdate = user => this.setState({ user });
+    api.onLoad = api.onStatusUpdate = this._userUpdate;
   }
 
   authHandler = () => {
-    api.authorize()
-      .then(user => this.setState({ user }));
+    api.authorize();
   }
 
   runHandler = () => {
@@ -151,9 +155,9 @@ class App extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <div className={classes.container}>
-          <Grid container spacing={24} className={classes.grid}>
-            <Grid item xs={12}>
+        <Grid container className={classes.grid}>
+          <Grid item xs={8}>
+            <div className={classes.container}>
               <TextField
                 variant="outlined"
                 fullWidth
@@ -161,70 +165,69 @@ class App extends Component {
                 value={resultString}
                 onChange={this.changeHandler('resultString')}
               />
-            </Grid>
-            <Grid item xs={4}>
+            </div>
+            <div className={classes.container}>
+              <Button color="primary" className={classes.button} onClick={this.runHandler} >
+                Run
+              </Button>
+              <Button className={classes.button} onClick={this.addParameterHandler} >
+                Add
+              </Button>
+            </div>
+            {parameters.map((parameter, index) => (
+              <div className={classes.container}>
+                <Grid container spacing={24}>
+                  <Grid item xs={12}>
+                    <div className={classes.variableBar}>
+                      <TextField
+                        fullWidth
+                        label="Name"
+                        variant="outlined"
+                        value={parameter.name}
+                        onChange={this.parameterChangeHandler(index, 'name')}
+                      />
+                      <IconButton className={classes.button} onClick={this.parameterDeleteHandler(index)}>
+                        <DeleteIcon className={classes.icon}/>
+                      </IconButton>
+                    </div>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <div className={classes.variableBar}>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Pattern"
+                        value={parameter.pattern}
+                        onChange={this.parameterChangeHandler(index, 'pattern')}
+                      />
+                      <FormGroup row style={{ marginLeft: 30, minWidth: 180 }}>
+                        {Object.keys(parameter.flags).map(key => (
+                          <FormControlLabel control={
+                            <Checkbox value={key} checked={parameter.flags[key]} onChange={this.parameterFlagHandler(index, key)} />
+                          } label={key} />
+                        ))}
+                      </FormGroup>
+                    </div>
+                  </Grid>
+                </Grid>
+              </div>
+            ))}
+          </Grid>
+          <Grid item xs={4}>
+            <div className={classes.container}>
               <TextField
                 label="Links"
                 fullWidth
                 multiline
-                rows={28}
                 variant="outlined"
                 value={links}
                 onChange={this.changeHandler('links')}
               />
-            </Grid>
-            <Grid item xs={8}>
-              {parameters.map((parameter, index) => (
-                <Paper className={classes.paper} elevation={1}>
-                  <Grid container spacing={24}>
-                    <Grid item xs={12}>
-                      <div className={classes.variableBar}>
-                        <TextField
-                          fullWidth
-                          label="Name"
-                          variant="outlined"
-                          value={parameter.name}
-                          onChange={this.parameterChangeHandler(index, 'name')}
-                        />
-                        <IconButton className={classes.button} onClick={this.parameterDeleteHandler(index)}>
-                          <DeleteIcon className={classes.icon}/>
-                        </IconButton>
-                      </div>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <div className={classes.variableBar}>
-                        <TextField
-                          fullWidth
-                          label="Pattern"
-                          variant="outlined"
-                          value={parameter.pattern}
-                          onChange={this.parameterChangeHandler(index, 'pattern')}
-                        />
-                        <FormGroup row style={{ marginLeft: 30, minWidth: 180 }}>
-                          {Object.keys(parameter.flags).map(key => (
-                            <FormControlLabel control={
-                              <Checkbox value={key} checked={parameter.flags[key]} onChange={this.parameterFlagHandler(index, key)} />
-                            } label={key} />
-                          ))}
-                        </FormGroup>
-                      </div>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              ))}
-            </Grid>
-            <Grid item xs={4}>
-              <Button color="primary" className={classes.button} onClick={this.runHandler} >
-                Run
-              </Button>
-            </Grid>
-            <Grid item xs={8}>
-              <Button className={classes.button} onClick={this.addParameterHandler} >
-                Add
-              </Button>
-            </Grid>
-            { result.length > 0 &&
-              <Grid item xs={12}>
+            </div>
+          </Grid>
+          { result.length > 0 &&
+            <Grid item xs={12}>
+              <div className={classes.container}>
                 <TextField
                   label="Result"
                   fullWidth
@@ -233,10 +236,10 @@ class App extends Component {
                   variant="outlined"
                   value={result}
                 />
-              </Grid>
-            }
-          </Grid>
-        </div>
+              </div>
+            </Grid>
+          }
+        </Grid>
       </div>
     );
   }

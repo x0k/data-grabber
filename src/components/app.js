@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -23,6 +24,10 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
+  },
+  wrapper: {
+    width: '90%',
+    margin: '0 auto',
   },
   container: {
     padding: 20
@@ -141,43 +146,53 @@ class App extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <div className={classes.container}>
-          <Textarea
-            label="Links"
-            value={links}
-            onChange={this.changeHandler('links')}
-          />
-        </div>
-        {parameters.map((parameter, index) => (
-          <Parameter
-            key={index}
-            className={classes.container}
-            value={parameter}
-            onChange={this.parameterChangeHandler(index)}
-            onCheck={this.parameterCheckHandler(index)}
-            onRemove={this.parameterDeleteHandler(index)}
-          />
-        ))}
-        <div className={classes.container}>
-          <Button variant="outlined" color="primary" className={classes.button} onClick={this.runHandler} disabled={!user}>
-            Run
-          </Button>
-          <Button variant="outlined" className={classes.button} onClick={this.parameterAddHandler} disabled={!user}>
-            Add
-          </Button>
-        </div>
-        <div className={classes.container}>
-          <Textarea
-            label="Items container"
-            value={itemsContainer}
-            onChange={this.changeHandler('itemsContainer')}
-          />
-        </div>
-        {result.length > 0 &&
-          result.map((element, index) =>
-            <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
-          )
-        }
+        <Grid container>
+          <Grid item xs={12} lg={6}>
+            <div className={classes.wrapper}>
+              <div className={classes.container}>
+                <Textarea
+                  label="Links"
+                  value={links}
+                  onChange={this.changeHandler('links')}
+                />
+              </div>
+              {parameters.map((parameter, index) => (
+                <Parameter
+                  key={index}
+                  className={classes.container}
+                  value={parameter}
+                  onChange={this.parameterChangeHandler(index)}
+                  onCheck={this.parameterCheckHandler(index)}
+                  onRemove={this.parameterDeleteHandler(index)}
+                />
+              ))}
+              <div className={classes.container}>
+                <Button variant="outlined" color="primary" className={classes.button} onClick={this.runHandler} disabled={!user}>
+                  Run
+                </Button>
+                <Button variant="outlined" className={classes.button} onClick={this.parameterAddHandler} disabled={!user}>
+                  Add
+                </Button>
+              </div>
+              <div className={classes.container}>
+                <Textarea
+                  label="Items container"
+                  value={itemsContainer}
+                  onChange={this.changeHandler('itemsContainer')}
+                />
+              </div>
+            </div>
+          </Grid>
+          {result.length > 0 &&
+            <Grid item xs={12} lg={6}>
+              <div className={classes.wrapper}>
+                {result.map((element, index) =>
+                  <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
+                )}
+              </div>
+            </Grid>
+          }
+        </Grid>
       </div>
     );
   }

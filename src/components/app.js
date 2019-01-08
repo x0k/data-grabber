@@ -162,7 +162,7 @@ class App extends Component {
           <Button variant="outlined" color="primary" className={classes.button} onClick={this.runHandler} disabled={!user}>
             Run
           </Button>
-          <Button variant="outlined" className={classes.button} onClick={this.addHandler} disabled={!user}>
+          <Button variant="outlined" className={classes.button} onClick={this.parameterAddHandler} disabled={!user}>
             Add
           </Button>
         </div>

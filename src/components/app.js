@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import Textarea from './textarea';
+import Parameter from './parameter';
+
 import api from '../assets/gapi';
+import ParameterData from '../assets/parameterData';
 import Grabber from '../assets/grabber';
 
-const styles = theme => ({
+const styles = {
   root: {
     flexGrow: 1,
   },
@@ -37,50 +34,37 @@ const styles = theme => ({
     fontSize: 26,
     margin: 5
   },
-  variableBar: {
+  row: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
-  grid: {
-    
+  flags: {
+    marginLeft: 30,
+    minWidth: 180
   }
-});
-
-class Parameter {
-
-  name = 'Parameter';
-  pattern = '';
-  flags = {
-    i: true,
-    g: false,
-    m: false,
-  };
-
-  constructor (name, pattern) {
-    this.name = name;
-    this.pattern = pattern;
-  }
-
-  flagsToString () {
-    let result = '';
-    for (let key of Object.keys(this.flags)) {
-      if (this.flags[key])
-        result += key;
-    }
-    return result;
-  }
-
-}
+};
 
 class App extends Component {
 
   state = {
-    links: 'https://reactjs.org',
+    links: 'https://reactjs.org\nhttps://learn.javascript.ru',
     parameters: [
-      new Parameter('Title', '<title.*>(.+)<\\/title>')
+      new ParameterData({
+        name: 'Title',
+        pattern: '<title.*?>(.+)<\\/title>',
+        item: '$1',
+      }),
+      new ParameterData({
+        name: 'Links',
+        pattern: '<a.+?href="(http.+?)".*?>([^<>]+?)<\\/a>',
+        item: '<li>$2: <a href="$1">$1</a></li>',
+        flags: { i: true, g: true, m: false }
+      })
     ],
-    resultString: 'Title: %Title%',
-    result: '',
+    itemsContainer: '<b>%Title%</b><br><ul>%Links%</ul>',
+    result: [],
     user: null,
   };
 
@@ -99,49 +83,50 @@ class App extends Component {
     api.authorize();
   }
 
-  runHandler = () => {
-    let grab = Grabber.grab(this.state.parameters, this.state.resultString);
-    Promise.all(this.state.links.split('\n').map(link => api.fetch(link)))
-      .then(result => result.map(text => grab(text)).join('\n'))
-      .then(result => this.setState({ result }));
-  }
-
   changeHandler = name => event => {
     this.setState({ [name]: event.target.value });
   }
 
-  parameterChangeHandler = (id, name) => (event, value) => {
-    this.setState((state, props) => {
+  runHandler = () => {
+    const { parameters, itemsContainer, links } = this.state;
+    let grab = Grabber.grab(parameters, itemsContainer);
+    Promise.all(links.split('\n').map(link => api.fetch(link)))
+      .then(result => result.map(text => grab(text)))
+      .then(result => this.setState({ result }));
+  }
+
+  parameterChangeHandler = id => name => (event, value) => {
+    this.setState(state => {
       state.parameters[id][name] = value;
       return state;
     });
   }
-
-  parameterFlagHandler = (id, flag) => (event, value) => {
-    this.setState((state, props) => {
-      state.parameters[id].flags[flag] = value;
+  
+  parameterCheckHandler = id => key => (event, value) => {
+    this.setState(state => {
+      state.parameters[id].flags[key] = value;
       return state;
     });
   }
 
   parameterDeleteHandler = (id) => () => {
-    this.setState((state, props) => {
+    this.setState(state => {
       state.parameters.splice(id, 1);
       return state;
     });
   }
 
-  addParameterHandler = () => {
-    this.setState((state, props) => {
-      state.parameters.push(new Parameter('Parameter', ''));
+  parameterAddHandler = () => {
+    this.setState(state => {
+      state.parameters.push(new ParameterData({}));
       return state;
     });
   }
 
   render() {
 
-    const { classes } = this.props,
-      { links, parameters, resultString, user, result } = this.state;
+    const { classes } = this.props;
+    const { links, parameters, itemsContainer, user, result } = this.state;
 
     return (
       <div className={classes.root}>
@@ -155,91 +140,42 @@ class App extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <Grid container className={classes.grid}>
-          <Grid item xs={8}>
-            <div className={classes.container}>
-              <TextField
-                variant="outlined"
-                fullWidth
-                label="Result string"
-                value={resultString}
-                onChange={this.changeHandler('resultString')}
-              />
-            </div>
-            <div className={classes.container}>
-              <Button variant="outlined" color="primary" className={classes.button} onClick={this.runHandler} disabled={!user}>
-                Run
-              </Button>
-              <Button variant="outlined" className={classes.button} onClick={this.addParameterHandler} disabled={!user}>
-                Add
-              </Button>
-            </div>
-            {parameters.map((parameter, index) => (
-              <div className={classes.container}>
-                <Grid container spacing={24}>
-                  <Grid item xs={12}>
-                    <div className={classes.variableBar}>
-                      <TextField
-                        fullWidth
-                        label="Name"
-                        variant="outlined"
-                        value={parameter.name}
-                        onChange={this.parameterChangeHandler(index, 'name')}
-                      />
-                      <IconButton className={classes.button} onClick={this.parameterDeleteHandler(index)}>
-                        <DeleteIcon className={classes.icon}/>
-                      </IconButton>
-                    </div>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <div className={classes.variableBar}>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Pattern"
-                        value={parameter.pattern}
-                        onChange={this.parameterChangeHandler(index, 'pattern')}
-                      />
-                      <FormGroup row style={{ marginLeft: 30, minWidth: 180 }}>
-                        {Object.keys(parameter.flags).map(key => (
-                          <FormControlLabel control={
-                            <Checkbox value={key} checked={parameter.flags[key]} onChange={this.parameterFlagHandler(index, key)} />
-                          } label={key} />
-                        ))}
-                      </FormGroup>
-                    </div>
-                  </Grid>
-                </Grid>
-              </div>
-            ))}
-          </Grid>
-          <Grid item xs={4}>
-            <div className={classes.container}>
-              <TextField
-                label="Links"
-                fullWidth
-                multiline
-                variant="outlined"
-                value={links}
-                onChange={this.changeHandler('links')}
-              />
-            </div>
-          </Grid>
-          { result.length > 0 &&
-            <Grid item xs={12}>
-              <div className={classes.container}>
-                <TextField
-                  label="Result"
-                  fullWidth
-                  multiline
-                  rows={result.split('\n').length}
-                  variant="outlined"
-                  value={result}
-                />
-              </div>
-            </Grid>
-          }
-        </Grid>
+        <div className={classes.container}>
+          <Textarea
+            label="Links"
+            value={links}
+            onChange={this.changeHandler('links')}
+          />
+        </div>
+        {parameters.map((parameter, index) => (
+          <Parameter
+            className={classes.container}
+            value={parameter}
+            onChange={this.parameterChangeHandler(index)}
+            onCheck={this.parameterCheckHandler(index)}
+            onRemove={this.parameterDeleteHandler(index)}
+          />
+        ))}
+        <div className={classes.container}>
+          <Button variant="outlined" color="primary" className={classes.button} onClick={this.runHandler} disabled={!user}>
+            Run
+          </Button>
+          <Button variant="outlined" className={classes.button} onClick={this.addHandler} disabled={!user}>
+            Add
+          </Button>
+        </div>
+        <div className={classes.container}>
+          <Textarea
+            label="Items container"
+            value={itemsContainer}
+            onChange={this.changeHandler('itemsContainer')}
+          />
+        </div>
+        {result.length > 0 &&
+          result.map(element =>
+            <div className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
+          )
+        }
       </div>
     );
   }

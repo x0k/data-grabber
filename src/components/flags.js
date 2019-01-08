@@ -8,12 +8,15 @@ export default function ({ className, value, onCheck }) {
   return (
     <FormGroup row className={className}>
       {Object.keys(value).map(key => (
-        <FormControlLabel control={
-          <Checkbox
-            value={key}
-            checked={value[key]}
-            onChange={onCheck(key)} />
-        } label={key} />
+        <FormControlLabel
+          key={key}
+          label={key}
+          control={
+            <Checkbox
+              value={key}
+              checked={value[key]}
+              onChange={onCheck(key)} />
+          } />
       ))}
     </FormGroup>
   );

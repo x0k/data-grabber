@@ -95,31 +95,32 @@ class App extends Component {
       .then(result => this.setState({ result }));
   }
 
-  parameterChangeHandler = id => name => (event, value) => {
-    this.setState(state => {
-      state.parameters[id][name] = value;
-      return state;
+  parameterChangeHandler = id => name => event => {
+    let value = event.target.value;
+    this.setState(({ parameters }) => {
+      parameters[id][name] = value;
+      return { parameters };
     });
   }
   
   parameterCheckHandler = id => key => (event, value) => {
-    this.setState(state => {
-      state.parameters[id].flags[key] = value;
-      return state;
+    this.setState(({ parameters }) => {
+      parameters[id].flags[key] = value;
+      return { parameters };
     });
   }
 
   parameterDeleteHandler = (id) => () => {
-    this.setState(state => {
-      state.parameters.splice(id, 1);
-      return state;
+    this.setState(({ parameters }) => {
+      parameters.splice(id, 1);
+      return { parameters };
     });
   }
 
   parameterAddHandler = () => {
-    this.setState(state => {
-      state.parameters.push(new ParameterData({}));
-      return state;
+    this.setState(({ parameters }) => {
+      parameters.push(new ParameterData({}));
+      return { parameters };
     });
   }
 
@@ -149,6 +150,7 @@ class App extends Component {
         </div>
         {parameters.map((parameter, index) => (
           <Parameter
+            key={index}
             className={classes.container}
             value={parameter}
             onChange={this.parameterChangeHandler(index)}
@@ -172,8 +174,8 @@ class App extends Component {
           />
         </div>
         {result.length > 0 &&
-          result.map(element =>
-            <div className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
+          result.map((element, index) =>
+            <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
           )
         }
       </div>

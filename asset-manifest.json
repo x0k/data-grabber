@@ -1,11 +1,11 @@
 {
-  "main.js": "/data-grabber/static/js/main.6c89ccaa.chunk.js",
-  "main.js.map": "/data-grabber/static/js/main.6c89ccaa.chunk.js.map",
-  "static/js/1.33ff388c.chunk.js": "/data-grabber/static/js/1.33ff388c.chunk.js",
-  "static/js/1.33ff388c.chunk.js.map": "/data-grabber/static/js/1.33ff388c.chunk.js.map",
+  "main.js": "/data-grabber/static/js/main.6b50cd88.chunk.js",
+  "main.js.map": "/data-grabber/static/js/main.6b50cd88.chunk.js.map",
+  "static/js/1.b830ba0b.chunk.js": "/data-grabber/static/js/1.b830ba0b.chunk.js",
+  "static/js/1.b830ba0b.chunk.js.map": "/data-grabber/static/js/1.b830ba0b.chunk.js.map",
   "runtime~main.js": "/data-grabber/static/js/runtime~main.a9fbfa2a.js",
   "runtime~main.js.map": "/data-grabber/static/js/runtime~main.a9fbfa2a.js.map",
   "index.html": "/data-grabber/index.html",
-  "precache-manifest.bd5ffc45136d86984298398cf6ccea13.js": "/data-grabber/precache-manifest.bd5ffc45136d86984298398cf6ccea13.js",
+  "precache-manifest.436e79a2f44452ffb0fcb764ff9509b0.js": "/data-grabber/precache-manifest.436e79a2f44452ffb0fcb764ff9509b0.js",
   "service-worker.js": "/data-grabber/service-worker.js"
 }

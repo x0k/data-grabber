@@ -11,7 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Textarea from './textarea';
 import Parameter from './parameter';
 
-import api from '../assets/gapi';
+import API from '../assets/api';
 import ParameterData from '../assets/parameterData';
 import Grabber from '../assets/grabber';
 
@@ -73,19 +73,15 @@ class App extends Component {
     user: null,
   };
 
-  _userUpdate = status => {
-    this.setState({
-      user: status ? api.user : null
-    });
-  }
+  api = null;
 
   constructor (props) {
     super(props);
-    api.onStatusUpdate = this._userUpdate;
+    this.api = new API(status => this.setState({ user: status ? this.api.user : null }));
   }
 
   authHandler = () => {
-    api.authorize();
+    this.api.authorize();
   }
 
   changeHandler = name => event => {
@@ -95,8 +91,8 @@ class App extends Component {
   runHandler = () => {
     const { parameters, itemsContainer, links } = this.state;
     let grab = Grabber.grab(parameters, itemsContainer);
-    Promise.all(links.split('\n').map(link => api.fetch(link)))
-      .then(result => result.map(text => grab(text)))
+    Promise.all(links.split('\n').map(link => this.api.fetch(link)))
+      .then(result => result.map(response => grab(response.result.response.result)))
       .then(result => this.setState({ result }));
   }
 

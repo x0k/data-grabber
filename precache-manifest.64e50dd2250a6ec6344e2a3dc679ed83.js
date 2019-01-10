@@ -8,11 +8,11 @@ self.__precacheManifest = [
     "url": "/data-grabber/static/js/main.f8deacb4.chunk.js"
   },
   {
-    "revision": "8d26f76ec214751990d1",
-    "url": "/data-grabber/static/js/1.8d26f76e.chunk.js"
+    "revision": "b7b1378ea9b8317d3de9",
+    "url": "/data-grabber/static/js/1.b7b1378e.chunk.js"
   },
   {
-    "revision": "46e38ff566ce98676984b70b6d17c2f7",
+    "revision": "0a47e9435e1305cbbb065cf40f485e19",
     "url": "/data-grabber/index.html"
   }
 ];

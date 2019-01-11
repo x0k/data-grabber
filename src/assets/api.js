@@ -11,7 +11,7 @@ class API extends GAPI {
     let data = {
       'function': 'fetch',
       'parameters': [ url ],
-      'devMode': true
+      'devMode': false
     };
     return super.execute(getRequest(data));
   }

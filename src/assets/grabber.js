@@ -22,7 +22,7 @@ class Expression {
 
 export default class Grabber {
 
-  static grab (parameters, buildString) {
+  static buildGrabber (parameters, buildString) {
     let expressions = parameters.map(parameter => new Expression(parameter));
     return text => {
       let values = expressions.reduce((values, exp) => {
@@ -31,6 +31,13 @@ export default class Grabber {
       }, {});
       return buildString.replace(/%(.+?)%/g, (match, name) => values[name]);
     };
+  }
+
+  static async grab (fetch, links, parameters, itemsContainer) {
+    const grabber = Grabber.buildGrabber(parameters, itemsContainer);
+    const result = await Promise.all(links.map(link => fetch(link)))
+      .then(result => result.map(response => response.result.response.result));
+    return result.map(text => grabber(text));
   }
 
 }

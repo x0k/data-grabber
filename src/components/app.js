@@ -11,7 +11,7 @@ import Parameter from './parameter';
 
 import API from '../assets/api';
 import ParameterData from '../assets/parameterData';
-import Grabber from '../assets/grabber';
+import { grab } from '../assets/grabber';
 
 const styles = {
   root: {
@@ -38,12 +38,13 @@ class App extends Component {
         name: 'Title',
         pattern: '<title.*?>(.+)<\\/title>',
         item: '$1',
+        flags: { s: true }
       }),
       new ParameterData({
         name: 'Links',
         pattern: '<a.+?href="(http.+?)".*?>([^<>]+?)<\\/a>',
         item: '<li>$2: <a href="$1">$1</a></li>',
-        flags: { i: true, g: true, m: false }
+        flags: { g: true }
       })
     ],
     itemsContainer: '<b>%Title%</b><br><ul>%Links%</ul>',
@@ -78,7 +79,7 @@ class App extends Component {
     const { parameters, itemsContainer, links } = this.state;
     const fetch = this.api.fetch.bind(this.api);
     const linksArray = links.split('\n');
-    Grabber.grab(fetch, linksArray, parameters, itemsContainer)
+    grab(fetch, linksArray, parameters, itemsContainer)
       .then(result => this.setState({ result }));
   }
 

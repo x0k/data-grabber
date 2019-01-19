@@ -16,7 +16,7 @@ const styles = {
   },
   flags: {
     marginLeft: 30,
-    minWidth: 180
+    minWidth: 240
   }
 };
 

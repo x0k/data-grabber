@@ -7,13 +7,16 @@ export default class ParameterData {
     i: true,
     g: false,
     m: false,
+    s: false,
   };
 
-  constructor ({ name = 'Parameter', pattern = '', item = '', flags = { i: true, g: false, m: false, } }) {
+  constructor ({ name = 'Parameter', pattern = '', item = '', flags = null }) {
     this.name = name;
     this.pattern = pattern;
     this.item = item;
-    this.flags = flags;
+    if (flags) {
+      this.flags = { ...this.flags, ...flags };
+    }
   }
 
   flagsToString () {

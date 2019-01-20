@@ -2,8 +2,8 @@ import React from 'react';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-
-import Flags from './flags';
+import FormGroup from '@material-ui/core/FormGroup';
+import CheckLabel from './checkLabel';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -15,8 +15,9 @@ const styles = {
     marginBottom: 10,
   },
   flags: {
-    marginLeft: 30,
-    minWidth: 240
+    marginLeft: 20,
+    marginRight: 20,
+    minWidth: 80
   }
 };
 
@@ -32,11 +33,18 @@ export default withStyles(styles)(function ({ className, classes, value, onChang
           value={name}
           onChange={onChange('name')}
         />
-        <Flags
-          className={classes.flags}
-          value={flags}
-          onCheck={onCheck}
-        />
+        <FormGroup row className={classes.flags}>
+          {Object.keys(flags).map(key => (
+            <CheckLabel
+              key={key}
+              value={key}
+              checked={flags[key]}
+              onChange={onCheck(key)}
+            >
+              {key}
+            </CheckLabel>
+          ))}
+        </FormGroup>
         <Button variant="outlined" color="secondary" onClick={onRemove}>
           Remove
         </Button>

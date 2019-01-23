@@ -153,6 +153,10 @@ class App extends Component {
                   Add
                 </Button>
               </div>
+            </div>
+          </Grid>
+          <Grid item xs={12} lg={6}>
+            <div className={classes.wrapper}>
               <div className={classes.container}>
                 <Textarea
                   label="Items container"
@@ -160,17 +164,11 @@ class App extends Component {
                   onChange={this.changeHandler('itemsContainer')}
                 />
               </div>
+              {result.length > 0 && result.map((element, index) =>
+                <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
+              )}
             </div>
           </Grid>
-          {result.length > 0 &&
-            <Grid item xs={12} lg={6}>
-              <div className={classes.wrapper}>
-                {result.map((element, index) =>
-                  <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
-                )}
-              </div>
-            </Grid>
-          }
         </Grid>
       </div>
     );

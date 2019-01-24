@@ -21,7 +21,7 @@ const styles = {
   }
 };
 
-export default withStyles(styles)(function ({ className, classes, value, onChange, onCheck, onRemove }) {
+export default withStyles(styles)(function ({ className, classes, value, onChange, onCheck, onRemove, onFocus, onBlur }) {
   const { name, flags, pattern, item } = value;
   return (
     <div className={className}>
@@ -56,6 +56,9 @@ export default withStyles(styles)(function ({ className, classes, value, onChang
           label="Pattern"
           value={pattern}
           onChange={onChange('pattern')}
+          onFocus={onFocus}
+          onInput={onFocus}
+          onBlur={onBlur}
         />
       </div>
       <div className={classes.row}>

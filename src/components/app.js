@@ -8,10 +8,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Bar from './bar';
 import Textarea from './textarea';
 import Parameter from './parameter';
+import Highlight from './higlight';
 
 import API from '../assets/api';
 import ParameterData from '../assets/parameterData';
 import { grab } from '../assets/grabber';
+import defaultText from '../assets/text';
 
 const styles = {
   root: {
@@ -47,6 +49,9 @@ class App extends Component {
         flags: { g: true }
       })
     ],
+    testText: defaultText,
+    testedParameter: null,
+    stateName: 'none',
     itemsContainer: '<b>%Title%</b><br><ul>%Links%</ul>',
     result: [],
     user: null,
@@ -112,10 +117,22 @@ class App extends Component {
     });
   }
 
+  parameterFocusHandler = (id) => () => this.setState(({ parameters }) => ({
+    stateName: 'test',
+    testedParameter: parameters[id]
+  }));
+
+  parameterBlurHandler = (id) => () => this.setState(() => ({
+    stateName: 'none',
+    testedParameter: null
+  }));
+
+  editHandler = () => this.setState(({ stateName }) => ({ stateName: stateName === 'edit' ? 'none' : 'edit' }));
+
   render() {
 
     const { classes } = this.props;
-    const { links, parameters, itemsContainer, user, result, anchorEl } = this.state;
+    const { links, parameters, itemsContainer, user, result, anchorEl, stateName, testText, testedParameter } = this.state;
 
     return (
       <div className={classes.root}>
@@ -135,6 +152,17 @@ class App extends Component {
                   onChange={this.changeHandler('links')}
                 />
               </div>
+              <div className={classes.container}>
+                <Button variant="outlined" color="primary" className={classes.button} onClick={this.runHandler} disabled={!user}>
+                  Run
+                </Button>
+                <Button variant="outlined" className={classes.button} onClick={this.parameterAddHandler}>
+                  Add
+                </Button>
+                <Button variant="outlined" className={classes.button} onClick={this.editHandler}>
+                  {stateName === 'edit' ? 'Save' : 'Edit'}
+                </Button>
+              </div>
               {parameters.map((parameter, index) => (
                 <Parameter
                   key={index}
@@ -143,16 +171,10 @@ class App extends Component {
                   onChange={this.parameterChangeHandler(index)}
                   onCheck={this.parameterCheckHandler(index)}
                   onRemove={this.parameterDeleteHandler(index)}
+                  onFocus={this.parameterFocusHandler(index)}
+                  onBlur={this.parameterBlurHandler(index)}
                 />
               ))}
-              <div className={classes.container}>
-                <Button variant="outlined" color="primary" className={classes.button} onClick={this.runHandler} disabled={!user}>
-                  Run
-                </Button>
-                <Button variant="outlined" className={classes.button} onClick={this.parameterAddHandler} disabled={!user}>
-                  Add
-                </Button>
-              </div>
             </div>
           </Grid>
           <Grid item xs={12} lg={6}>
@@ -164,6 +186,21 @@ class App extends Component {
                   onChange={this.changeHandler('itemsContainer')}
                 />
               </div>
+              {stateName === 'edit' &&
+                <div className={classes.container}>
+                  <Textarea
+                    label="Test text"
+                    value={testText}
+                    onChange={this.changeHandler('testText')}
+                  />
+                </div>
+              }
+              {stateName === 'test' &&
+                <Highlight
+                  parameter={testedParameter}
+                  value={testText}
+                />
+              }
               {result.length > 0 && result.map((element, index) =>
                 <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
               )}

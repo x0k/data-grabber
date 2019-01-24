@@ -196,10 +196,12 @@ class App extends Component {
                 </div>
               }
               {stateName === 'test' &&
-                <Highlight
-                  parameter={testedParameter}
-                  value={testText}
-                />
+                <div className={classes.container}>
+                  <Highlight
+                    parameter={testedParameter}
+                    value={testText}
+                  />
+                </div>
               }
               {result.length > 0 && result.map((element, index) =>
                 <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>

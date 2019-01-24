@@ -30,20 +30,11 @@ const highlight = (value, matches, classes) => new Promise((resolve, reject) => 
     let text = match.element;
     for (let m of match.inner) {
       let [a, b] = text.split(m.element);
-      a = a.split('\n');
-      if (a.length > 1) {
-        a = a.map(el => (<div>{el}</div>));
-      }
-      value = [ ...value, ...a, hl(m, lvl+1) ];
+      value = [ ...value, a, hl(m, lvl+1) ];
       text = b;
     }
     if (text.length) {
-      let splitted = text.split('\n');
-      if (splitted.length > 1) {
-        value.push(...splitted.map(el => (<div>{el}</div>)));
-      } else {
-        value.push(text);
-      }
+      value.push(text);
     }
     return (<span className={classes[`hl-${lvl}`]}>
       {value.filter(el => Boolean(el))}
@@ -56,11 +47,25 @@ const highlight = (value, matches, classes) => new Promise((resolve, reject) => 
 });
 
 const styles = {
+  container: {
+    borderStyle: 'solid',
+    border: 1,
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.23)',
+    whiteSpace: 'pre-wrap',
+    wordWrap: 'break-word',
+    padding: '20px 14px',
+    fontFamily: 'Roboto',
+    '&:hover': {
+      borderColor: 'rgba(0, 0, 0, 1)',
+    }
+  }
 };
 
 for (let i = 1; i < 10; i++) {
   styles[`hl-${i}`] = {
-    background: `hsl(${(1-i/5)*120}, 100%, 50%)`
+    background: `hsl(${(1-i/5)*120}, 100%, 50%)`,
+    padding: 2,
   };
 }
 
@@ -72,7 +77,7 @@ class Highlight extends Component {
   }
 
   render () {
-    const { className, value, parameter, classes } = this.props;
+    const { value, parameter, classes } = this.props;
     const { status, lastRegExp } = this.state;
     const regExp = parameter.pattern + parameter.flagsToString();
     if (lastRegExp !== regExp) {
@@ -82,12 +87,12 @@ class Highlight extends Component {
         .catch(({ error }) => this.setState({ status: error, lastRegExp: regExp }));
     }
     return (
-      <div className={className}>
+      <div className={classes.container}>
         {status ? status : toLines(value)}
       </div>
     );
   }
 
-}
+} 
 
 export default withStyles(styles)(Highlight);

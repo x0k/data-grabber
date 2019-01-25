@@ -45,11 +45,12 @@ const highlight = (value, matches, classes) => new Promise((resolve, reject) => 
     let i = 0;
     for (const m of match.inner) {
       const [a, ...b] = text.split(m.element);
-      value = [ ...value, <Collapser key={m.element + i++} value={a} />, hl(m, lvl+1) ];
+      const prev = lvl < 1 ? <Collapser key={m.element + i++} value={a} /> : a;
+      value = [ ...value, prev, hl(m, lvl+1) ];
       text = b.join('');
     }
     if (text.length) {
-      value.push(<Collapser key={match.element + '_end'} value={text} />);
+      value.push(lvl < 1 ? <Collapser key={match.element + '_end'} value={text} /> : text);
     }
     return (
       <span key={match.element} className={classes[`hl-${lvl}`]}>

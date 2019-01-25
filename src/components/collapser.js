@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -11,14 +11,39 @@ const styles = {
   }
 };
 
+const getBegin = (text) => {
+  let index = -1;
+  let last = 0;
+  let c = 0;
+  do {
+    last = index;
+    index = text.indexOf('\n', index + 1);
+    c++;
+  } while (index !== -1 && c < 4 && index - last < 161);
+  let end = c < 4 ? last + 160 : index;
+  return text.slice(0, end);
+};
+
+const getEnd = (text) => {
+  let index = text.length;
+  let last = index;
+  let c = 0;
+  do {
+    last = index;
+    index = text.lastIndexOf('\n', index - 1);
+    c++;
+  } while(index !== -1 && c < 4 && last - index < 161);
+  const from = c < 4 ? last - 160 : index;
+  return text.slice(from, text.length);
+};
+
 export default withStyles(styles)(function Collapser ({ classes, value, key }) {
   let text;
-  const lines = value.split('\n');
-  const len = lines.length;
-  if (len > 10) {
-    const begin = lines.slice(0, 4).join('\n');
-    const middle = <div key={key + '_btn'} className={classes.collapserDesc}>{len - 6} hidden lines</div>;
-    const end = lines.slice(len - 4, len).join('\n');
+  if (value.length > 340) {
+    const begin = getBegin(value);
+    const end = getEnd(value);
+    const middle = <div key={key + '_btn'} className={classes.collapserDesc}>Hidden part</div>;
+    
     text = [begin, middle, end];
   } else {
     text = value;

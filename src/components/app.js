@@ -84,7 +84,7 @@ class App extends Component {
     const fetch = this.api.fetch.bind(this.api);
     const linksArray = links.split('\n');
     grab(fetch, linksArray, parameters, itemsContainer)
-      .then(result => this.setState({ result }));
+      .then(result => this.setState({ stateName: 'show', result }));
   }
 
   parameterChangeHandler = id => name => event => {
@@ -212,7 +212,7 @@ class App extends Component {
                   />
                 </div>
               }
-              {result.length > 0 && result.map((element, index) =>
+              {stateName === 'show' && result.length > 0 && result.map((element, index) =>
                 <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
               )}
             </div>

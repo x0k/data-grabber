@@ -7,6 +7,8 @@ import CheckLabel from './checkLabel';
 
 import { withStyles } from '@material-ui/core/styles';
 
+const mw = 84;
+
 const styles = {
   row: {
     display: 'flex',
@@ -16,12 +18,15 @@ const styles = {
   },
   flags: {
     marginLeft: 20,
-    marginRight: 20,
-    minWidth: 80
+    minWidth: mw
+  },
+  btn: {
+    marginLeft: 20,
+    minWidth: mw,
   }
 };
 
-export default withStyles(styles)(function ({ className, classes, value, onChange, onCheck, onRemove, onFocus, onBlur }) {
+export default withStyles(styles)(function Parameter ({ className, classes, value, onChange, onCheck, onRemove, onTest }) {
   const { name, flags, pattern, item } = value;
   return (
     <div className={className}>
@@ -45,9 +50,6 @@ export default withStyles(styles)(function ({ className, classes, value, onChang
             </CheckLabel>
           ))}
         </FormGroup>
-        <Button variant="outlined" color="secondary" onClick={onRemove}>
-          Remove
-        </Button>
       </div>
       <div className={classes.row}>
         <TextField
@@ -56,10 +58,10 @@ export default withStyles(styles)(function ({ className, classes, value, onChang
           label="Pattern"
           value={pattern}
           onChange={onChange('pattern')}
-          onFocus={onFocus}
-          onInput={onFocus}
-          onBlur={onBlur}
         />
+        <Button className={classes.btn} variant="outlined" onClick={onTest}>
+          Test
+        </Button>
       </div>
       <div className={classes.row}>
         <TextField
@@ -69,6 +71,9 @@ export default withStyles(styles)(function ({ className, classes, value, onChang
           value={item}
           onChange={onChange('item')}
         />
+        <Button className={classes.btn} variant="outlined" color="secondary" onClick={onRemove}>
+          Remove
+        </Button>
       </div>
     </div>
   );

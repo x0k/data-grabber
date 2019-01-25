@@ -13,7 +13,6 @@ import Highlight from './higlight';
 import API from '../assets/api';
 import ParameterData from '../assets/parameterData';
 import { grab } from '../assets/grabber';
-import defaultText from '../assets/text';
 
 const styles = {
   root: {
@@ -49,7 +48,7 @@ class App extends Component {
         flags: { g: true }
       })
     ],
-    testText: defaultText,
+    testText: null,
     testedParameter: null,
     stateName: 'none',
     itemsContainer: '<b>%Title%</b><br><ul>%Links%</ul>',
@@ -117,6 +116,22 @@ class App extends Component {
     });
   }
 
+  parameterTestHandler = (id) => () => {
+    const { links, parameters } = this.state;
+    const parameter = parameters[id];
+    if (links.length === 0) {
+      this.setState({
+        stateName: 'test',
+        testText: 'No links',
+        testedParameter: parameter,
+      });
+    }
+    const link = links.split('\n')[0];
+    this.api.fetch(link)
+      .then(response => response.result.response.result)
+      .then(testText => this.setState({ stateName: 'test', testText, testedParameter: parameter }));
+  }
+
   parameterFocusHandler = (id) => () => this.setState(({ parameters }) => ({
     stateName: 'test',
     testedParameter: parameters[id]
@@ -126,8 +141,6 @@ class App extends Component {
     stateName: 'none',
     testedParameter: null
   }));
-
-  editHandler = () => this.setState(({ stateName }) => ({ stateName: stateName === 'edit' ? 'none' : 'edit' }));
 
   render() {
 
@@ -159,9 +172,6 @@ class App extends Component {
                 <Button variant="outlined" className={classes.button} onClick={this.parameterAddHandler}>
                   Add
                 </Button>
-                <Button variant="outlined" className={classes.button} onClick={this.editHandler}>
-                  {stateName === 'edit' ? 'Save' : 'Edit'}
-                </Button>
               </div>
               {parameters.map((parameter, index) => (
                 <Parameter
@@ -171,8 +181,7 @@ class App extends Component {
                   onChange={this.parameterChangeHandler(index)}
                   onCheck={this.parameterCheckHandler(index)}
                   onRemove={this.parameterDeleteHandler(index)}
-                  onFocus={this.parameterFocusHandler(index)}
-                  onBlur={this.parameterBlurHandler(index)}
+                  onTest={this.parameterTestHandler(index)}
                 />
               ))}
             </div>

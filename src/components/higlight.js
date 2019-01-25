@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import Collapser from './collapser';
+
 import { withStyles } from '@material-ui/core/styles';
 
 const match = (value, parameter) => new Promise((resolve, reject) => {
@@ -40,13 +42,14 @@ const highlight = (value, matches, classes) => new Promise((resolve, reject) => 
   const hl = (match, lvl) => {
     let value = [ ];
     let text = match.element;
+    let i = 0;
     for (const m of match.inner) {
       const [a, ...b] = text.split(m.element);
-      value = [ ...value, a, hl(m, lvl+1) ];
+      value = [ ...value, <Collapser key={m.element + i++} value={a} />, hl(m, lvl+1) ];
       text = b.join('');
     }
     if (text.length) {
-      value.push(text);
+      value.push(<Collapser key={match.element + '_end'} value={text} />);
     }
     return (
       <span key={match.element} className={classes[`hl-${lvl}`]}>
@@ -54,9 +57,6 @@ const highlight = (value, matches, classes) => new Promise((resolve, reject) => 
       </span>
     );
   };
-  if (!matches) {
-    reject({ error: 'No matches' });
-  }
   resolve(hl({ inner: matches, element: value }, 0));
 });
 
@@ -76,9 +76,10 @@ const styles = {
   }
 };
 
-for (let i = 1; i < 4; i++) {
+for (let i = 1; i < 5; i++) {
   styles[`hl-${i}`] = {
-    background: `hsl(${(1-i/4)*120}, 100%, 50%)`,
+    background: `hsl(${(1-i/5)*120}, 100%, 50%)`,
+    borderRadius: 3,
   };
 }
 

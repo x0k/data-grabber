@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { withStyles } from '@material-ui/core/styles';
 
 import Bar from './bar';
 import Textarea from './textarea';
 import Parameter from './parameter';
+import Outlined from './outlined';
 import Highlight from './higlight';
 
 import API from '../assets/api';
@@ -28,6 +30,9 @@ const styles = {
   button: {
     marginRight: 20,
   },
+  progress: {
+    margin: '10 auto'
+  }
 };
 
 class App extends Component {
@@ -79,11 +84,14 @@ class App extends Component {
     this.setState({ [name]: event.target.value });
   }
 
+  startLoading = () => new Promise(resolve => this.setState({ stateName: 'loading' }, resolve));
+
   runHandler = () => {
     const { parameters, itemsContainer, links } = this.state;
     const fetch = this.api.fetch.bind(this.api);
     const linksArray = links.split('\n');
-    grab(fetch, linksArray, parameters, itemsContainer)
+    this.startLoading()
+      .then(() => grab(fetch, linksArray, parameters, itemsContainer))
       .then(result => this.setState({ stateName: 'show', result }));
   }
 
@@ -127,7 +135,8 @@ class App extends Component {
       });
     }
     const link = links.split('\n')[0];
-    this.api.fetch(link)
+    this.startLoading()
+      .then(() => this.api.fetch(link))
       .then(response => response.result.response.result)
       .then(testText => this.setState({ stateName: 'test', testText, testedParameter: parameter }));
   }
@@ -206,15 +215,28 @@ class App extends Component {
               }
               {stateName === 'test' &&
                 <div className={classes.container}>
-                  <Highlight
-                    parameter={testedParameter}
-                    value={testText}
-                  />
+                  <Outlined>
+                    <Highlight
+                      parameter={testedParameter}
+                      value={testText}
+                    />
+                  </Outlined>
                 </div>
               }
               {stateName === 'show' && result.length > 0 && result.map((element, index) =>
-                <div key={index} className={classes.container} dangerouslySetInnerHTML={{__html: element}}></div>
+                <div key={index} className={classes.container} >
+                  <Outlined>
+                    <div dangerouslySetInnerHTML={{__html: element}}></div>
+                  </Outlined>
+                </div>
               )}
+              {stateName === 'loading' &&
+                <div className={classes.container}>
+                  <Outlined>
+                    <LinearProgress />
+                  </Outlined>
+                </div>
+              }
             </div>
           </Grid>
         </Grid>

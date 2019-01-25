@@ -62,19 +62,7 @@ const highlight = (value, matches, classes) => new Promise((resolve, reject) => 
 });
 
 const styles = {
-  container: {
-    borderStyle: 'solid',
-    border: 1,
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.23)',
-    whiteSpace: 'pre-wrap',
-    wordWrap: 'break-word',
-    padding: '20px 14px',
-    fontFamily: 'Roboto',
-    '&:hover': {
-      borderColor: 'rgba(0, 0, 0, 1)',
-    }
-  }
+
 };
 
 for (let i = 1; i < 5; i++) {
@@ -104,7 +92,7 @@ class Highlight extends Component {
         .catch(onError);
     }
     return (
-      <div className={classes.container}>
+      <div>
         {status ? status : value}
       </div>
     );

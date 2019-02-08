@@ -21,7 +21,7 @@ const flags = (state, action) => {
   }
 };
 
-const parameter = (state = new ParameterData(), action) => {
+const parameter = (state = new ParameterData({}), action) => {
   switch (action.type) {
   case SET_PARAMETER_NAME:
     return {
@@ -36,7 +36,7 @@ const parameter = (state = new ParameterData(), action) => {
   case SET_PARAMETER_ITEM:
     return {
       ...state,
-      item: action.item
+      item: action.payload
     };
   case TOGGLE_FLAG:
     return {

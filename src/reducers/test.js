@@ -1,17 +1,9 @@
-import { SET_TEST_TEXT, SET_TEST_PARAMETER } from '../actions';
+import { SET_TEST } from '../actions';
 
 const test = (state = { text: '', parameter: -1 }, action) => {
   switch(action.type) {
-  case SET_TEST_TEXT:
-    return {
-      ...state,
-      text: action.payload
-    };
-  case SET_TEST_PARAMETER:
-    return {
-      ...state,
-      parameter: action.payload,
-    };
+  case SET_TEST:
+    return action.payload;
   default:
     return state;
   }

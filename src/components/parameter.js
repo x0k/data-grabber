@@ -26,7 +26,17 @@ const styles = {
   }
 };
 
-export default withStyles(styles)(function Parameter ({ className, classes, value, onChange, onCheck, onRemove, onTest }) {
+export default withStyles(styles)(function Parameter ({
+  className,
+  classes,
+  value,
+  onNameChange,
+  onPatternChange,
+  onItemChange,
+  onCheck,
+  onRemove,
+  onTest
+}) {
   const { name, flags, pattern, item } = value;
   return (
     <div className={className}>
@@ -36,7 +46,7 @@ export default withStyles(styles)(function Parameter ({ className, classes, valu
           label="Name"
           variant="outlined"
           value={name}
-          onChange={onChange('name')}
+          onChange={onNameChange}
         />
         <FormGroup row className={classes.flags}>
           {Object.keys(flags).map(key => (
@@ -57,7 +67,7 @@ export default withStyles(styles)(function Parameter ({ className, classes, valu
           variant="outlined"
           label="Pattern"
           value={pattern}
-          onChange={onChange('pattern')}
+          onChange={onPatternChange}
         />
         <Button className={classes.btn} variant="outlined" onClick={onTest}>
           Test
@@ -69,7 +79,7 @@ export default withStyles(styles)(function Parameter ({ className, classes, valu
           variant="outlined"
           label="Item"
           value={item}
-          onChange={onChange('item')}
+          onChange={onItemChange}
         />
         <Button className={classes.btn} variant="outlined" color="secondary" onClick={onRemove}>
           Remove

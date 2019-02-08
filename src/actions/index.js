@@ -1,8 +1,10 @@
-const simpleAction = (name) => () => ({ type: name });
+import { grab } from '../common/grabber';
 
-const transferAction = (name) => (payload) => ({ type: name, payload });
+const simpleAction = (type) => () => ({ type });
 
-const indexedAction = (name) =>  (id, payload) => ({ type: name, id, payload, });
+const transferAction = (type) => (payload) => ({ type, payload });
+
+const indexedAction = (type) =>  (id, payload) => ({ type, id, payload, });
 
 const createActions = (builder, ...actions) => actions.map(action => builder(action));
 
@@ -28,9 +30,7 @@ export const SET_PARAMETER_ITEM = 'SET_PARAMETER_ITEM';
 
 export const TOGGLE_FLAG = 'TOGGLE_FLAG';
 
-export const SET_TEST_TEXT = 'SET_TEST_TEXT';
-
-export const SET_TEST_PARAMETER = 'SET_TEST_PARAMETER';
+export const SET_TEST = 'SET_TEST';
 
 export const SET_RESULT = 'SET_RESULT';
 
@@ -38,32 +38,73 @@ export const SET_CONTAINER = 'SET_CONTAINER';
 
 export const SET_STATUS = 'SET_STATUS';
 
-const [ authorize, addParameter ] = createActions(simpleAction, [
+export const status = {
+  none: 'none',
+  loading: 'loading',
+  test: 'test',
+  show: 'show',
+};
+
+const [ authorize, addParameter ] = createActions(simpleAction,
   AUTHORIZE,
   ADD_PARAMETER
-]);
+);
 
-const [ createAPI, setAnchor, setLinks, setUser, delParameter, setTestText, setTestParameter, setResult, setContainer, setStatus ] = createActions(transferAction, [
+const [ createAPI, setAnchor, setLinks, setUser, delParameter, setTest, setResult, setContainer, setStatus ] = createActions(transferAction,
   CREATE_API,
   SET_ANCHOR,
   SET_LINKS,
   SET_USER,
   DEL_PARAMETER,
-  SET_TEST_TEXT,
-  SET_TEST_PARAMETER,
+  SET_TEST,
   SET_RESULT,
   SET_CONTAINER,
   SET_STATUS
-]);
+);
 
-const [ setParameterName, setParameterPattern, setParameterItem, toggleFlag ] = createActions(indexedAction, [
+const [ setParameterName, setParameterPattern, setParameterItem, toggleFlag ] = createActions(indexedAction,
   SET_PARAMETER_NAME,
   SET_PARAMETER_PATTER,
-  SET_PARAMETER_NAME,
+  SET_PARAMETER_ITEM,
   TOGGLE_FLAG
-]);
+);
 
 export {
-  createAPI, setAnchor, setLinks, setUser, setTestText, setTestParameter, setResult, setContainer, setStatus,
+  createAPI, setAnchor, setLinks, setUser, setResult, setContainer, setStatus,
   authorize, addParameter, delParameter, setParameterName, setParameterPattern, setParameterItem, toggleFlag
 };
+
+export function runGraber () {
+  return (dispatch, getState) => {
+    dispatch(setStatus(status.loading));
+    const { api, links, container, parameters } = getState();
+    const fetch = (url) => api.fetch(url);
+    const linksArray = links.split('\n');
+    return grab(fetch, linksArray, parameters, container)
+      .then(result => {
+        dispatch(setResult(result));
+        dispatch(setStatus(status.show));
+      });
+  };
+}
+
+export function test (id) {
+  return (dispatch, getState) => {
+    const { api, links, parameters } = getState();
+    if (links.length === 0) {
+      dispatch(setResult([ 'No links' ]));
+      dispatch(setStatus(status.show));
+    } else {
+      dispatch(setStatus(status.loading));
+      const parameter = parameters[id];
+      const link = links.split('\n')[0];
+      return api.fetch(link)
+        .then(response => response.result.response.result)
+        .then(text => {
+          dispatch(setTest({ text, parameter }));
+          dispatch(setStatus(status.test));
+        });
+    }
+
+  };
+}

@@ -19,7 +19,7 @@ import {
 
 const stateToProps = (state) => state;
 
-const dispatchToProps = (dispatch) => ({
+const dispatchToProps = (dispatch, props) => ({
   menuHandler: (action) => (event) => dispatch(setAnchor(action ? event.currentTarget : null)),
   authHandler: () => dispatch(authorize()),
   linksChangeHandler: (event) => dispatch(setLinks(event.target.value)),
@@ -32,6 +32,7 @@ const dispatchToProps = (dispatch) => ({
   parameterItemHandler: (id) => (event) => dispatch(setParameterItem(id, event.target.value)),
   parameterCheckHandler: (id) => (name) => (event, value) => dispatch(toggleFlag(id, name)),
   parameterTestHandler: (id) => () => dispatch(test(id)),
+  authorize: () => dispatch(authorize())
 });
 
 const AppContainer = connect(

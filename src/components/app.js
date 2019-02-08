@@ -11,6 +11,7 @@ import Textarea from './textarea';
 import Parameter from './parameter';
 import Outlined from './outlined';
 import Highlight from './highlight';
+import { setAnchor, setUser } from '../actions';
 
 const styles = {
   root: {
@@ -33,6 +34,7 @@ const styles = {
 
 export default withStyles(styles)(function App ({
   classes,
+  api,
   links,
   parameters,
   container,
@@ -44,7 +46,6 @@ export default withStyles(styles)(function App ({
   authHandler,
   menuHandler,
   linksChangeHandler,
-  parameterChangeHandler,
   parameterCheckHandler,
   parameterDeleteHandler,
   parameterTestHandler,
@@ -53,8 +54,12 @@ export default withStyles(styles)(function App ({
   containerChangeHandler,
   parameterNameHandler,
   parameterPatternHandler,
-  parameterItemHandler
+  parameterItemHandler,
+  authorize,
 }) {
+  if (!api) {
+    authorize();
+  }
   return (
     <div className={classes.root}>
       <Bar

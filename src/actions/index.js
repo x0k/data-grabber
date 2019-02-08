@@ -12,8 +12,6 @@ export const CREATE_API = 'CREATE_API';
 
 export const SET_ANCHOR = 'SET_ANCHOR';
 
-export const AUTHORIZE = 'AUTHORIZE';
-
 export const SET_LINKS = 'SET_LINKS';
 
 export const SET_USER = 'SET_USER';
@@ -45,8 +43,7 @@ export const status = {
   show: 'show',
 };
 
-const [ authorize, addParameter ] = createActions(simpleAction,
-  AUTHORIZE,
+const [ addParameter ] = createActions(simpleAction,
   ADD_PARAMETER
 );
 
@@ -71,8 +68,23 @@ const [ setParameterName, setParameterPattern, setParameterItem, toggleFlag ] = 
 
 export {
   createAPI, setAnchor, setLinks, setUser, setResult, setContainer, setStatus,
-  authorize, addParameter, delParameter, setParameterName, setParameterPattern, setParameterItem, toggleFlag
+  addParameter, delParameter, setParameterName, setParameterPattern, setParameterItem, toggleFlag
 };
+
+export function authorize () {
+  return (dispatch, getState) => {
+    let { api } = getState();
+    if (!api) {
+      dispatch(createAPI(status => {
+        dispatch(setAnchor(null));
+        dispatch(setUser(api && status ? api.user.getBasicProfile() : null));
+      }));
+      api = getState().api;
+    } else {
+      api.authorize();
+    }
+  };
+}
 
 export function runGraber () {
   return (dispatch, getState) => {
@@ -105,6 +117,5 @@ export function test (id) {
           dispatch(setStatus(status.test));
         });
     }
-
   };
 }

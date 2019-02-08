@@ -6,6 +6,12 @@ const indexedAction = (name) =>  (id, payload) => ({ type: name, id, payload, })
 
 const createActions = (builder, ...actions) => actions.map(action => builder(action));
 
+export const CREATE_API = 'CREATE_API';
+
+export const SET_ANCHOR = 'SET_ANCHOR';
+
+export const AUTHORIZE = 'AUTHORIZE';
+
 export const SET_LINKS = 'SET_LINKS';
 
 export const SET_USER = 'SET_USER';
@@ -32,11 +38,14 @@ export const SET_CONTAINER = 'SET_CONTAINER';
 
 export const SET_STATUS = 'SET_STATUS';
 
-const [ addParameter ] = createActions(simpleAction, [
+const [ authorize, addParameter ] = createActions(simpleAction, [
+  AUTHORIZE,
   ADD_PARAMETER
 ]);
 
-const [ setLinks, setUser, delParameter, setTestText, setTestParameter, setResult, setContainer, setStatus ] = createActions(transferAction, [
+const [ createAPI, setAnchor, setLinks, setUser, delParameter, setTestText, setTestParameter, setResult, setContainer, setStatus ] = createActions(transferAction, [
+  CREATE_API,
+  SET_ANCHOR,
   SET_LINKS,
   SET_USER,
   DEL_PARAMETER,
@@ -55,6 +64,6 @@ const [ setParameterName, setParameterPattern, setParameterItem, toggleFlag ] = 
 ]);
 
 export {
-  setLinks, setUser, setTestText, setTestParameter, setResult, setContainer, setStatus,
-  addParameter, delParameter, setParameterName, setParameterPattern, setParameterItem, toggleFlag
+  createAPI, setAnchor, setLinks, setUser, setTestText, setTestParameter, setResult, setContainer, setStatus,
+  authorize, addParameter, delParameter, setParameterName, setParameterPattern, setParameterItem, toggleFlag
 };

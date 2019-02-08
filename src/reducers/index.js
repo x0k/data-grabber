@@ -6,8 +6,12 @@ import container from './container';
 import result from './result';
 import user from './user';
 import status from './status';
+import api from './api';
+import anchor from './anchor';
 
 const redusers = combineReducers({
+  api,
+  anchor,
   user,
   links,
   parameters,

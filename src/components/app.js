@@ -10,7 +10,7 @@ import Bar from './bar';
 import Textarea from './textarea';
 import Parameter from './parameter';
 import Outlined from './outlined';
-import Highlight from './higlight';
+import Highlight from './highlight';
 
 import API from '../assets/api';
 import ParameterData from '../assets/parameterData';
@@ -53,46 +53,42 @@ class App extends Component {
         flags: { g: true }
       })
     ],
-    testText: null,
-    testedParameter: null,
-    stateName: 'none',
-    itemsContainer: '<b>%Title%</b><br><ul>%Links%</ul>',
+    test: {
+      text: null,
+      parameter: null,
+    },
+    status: 'none',
+    container: '<b>%Title%</b><br><ul>%Links%</ul>',
     result: [],
     user: null,
-    anchorEl: null,
+    anchor: null,
+    api: new API(status => this.setState({
+      user: status ? this.state.api.user.getBasicProfile() : null,
+      anchor: null,
+    }))
   };
 
-  api = null;
-
-  constructor (props) {
-    super(props);
-    this.api = new API(status => this.setState({
-      user: status ? this.api.user.getBasicProfile() : null,
-      anchorEl: null,
-    }));
-  }
-
   menuHandler = action => event => {
-    this.setState({ anchorEl: action ? event.currentTarget : null });
+    this.setState({ anchor: action ? event.currentTarget : null });
   };
 
   authHandler = () => {
-    this.api.authorize();
+    this.state.api.authorize();
   }
 
-  changeHandler = name => event => {
-    this.setState({ [name]: event.target.value });
-  }
+  linksChangeHandler = (event) => this.setState({ links: event.target.value });
 
-  startLoading = () => new Promise(resolve => this.setState({ stateName: 'loading' }, resolve));
+  containerChangeHandler = (event) => this.setState({ container: event.target.value });
+
+  startLoading = () => new Promise(resolve => this.setState({ status: 'loading' }, resolve));
 
   runHandler = () => {
-    const { parameters, itemsContainer, links } = this.state;
-    const fetch = this.api.fetch.bind(this.api);
+    const { parameters, container, links } = this.state;
+    const fetch = (url) => this.state.api.fetch(url);
     const linksArray = links.split('\n');
     this.startLoading()
-      .then(() => grab(fetch, linksArray, parameters, itemsContainer))
-      .then(result => this.setState({ stateName: 'show', result }));
+      .then(() => grab(fetch, linksArray, parameters, container))
+      .then(result => this.setState({ status: 'show', result }));
   }
 
   parameterChangeHandler = id => name => event => {
@@ -129,37 +125,29 @@ class App extends Component {
     const parameter = parameters[id];
     if (links.length === 0) {
       this.setState({
-        stateName: 'test',
-        testText: 'No links',
-        testedParameter: parameter,
+        status: 'test',
+        test: {
+          text: 'No links',
+          parameter: parameter
+        }
       });
     }
     const link = links.split('\n')[0];
     this.startLoading()
-      .then(() => this.api.fetch(link))
+      .then(() => this.state.api.fetch(link))
       .then(response => response.result.response.result)
-      .then(testText => this.setState({ stateName: 'test', testText, testedParameter: parameter }));
+      .then(text => this.setState({ status: 'test', test: { text, parameter } }));
   }
-
-  parameterFocusHandler = (id) => () => this.setState(({ parameters }) => ({
-    stateName: 'test',
-    testedParameter: parameters[id]
-  }));
-
-  parameterBlurHandler = (id) => () => this.setState(() => ({
-    stateName: 'none',
-    testedParameter: null
-  }));
 
   render() {
 
     const { classes } = this.props;
-    const { links, parameters, itemsContainer, user, result, anchorEl, stateName, testText, testedParameter } = this.state;
+    const { links, parameters, container, user, result, anchor, status, test } = this.state;
 
     return (
       <div className={classes.root}>
         <Bar
-          anchor={anchorEl}
+          anchor={anchor}
           user={user}
           authHandler={this.authHandler}
           menuHandler={this.menuHandler}
@@ -171,7 +159,7 @@ class App extends Component {
                 <Textarea
                   label="Links"
                   value={links}
-                  onChange={this.changeHandler('links')}
+                  onChange={this.linksChangeHandler}
                 />
               </div>
               <div className={classes.container}>
@@ -200,37 +188,28 @@ class App extends Component {
               <div className={classes.container}>
                 <Textarea
                   label="Items container"
-                  value={itemsContainer}
-                  onChange={this.changeHandler('itemsContainer')}
+                  value={container}
+                  onChange={this.containerChangeHandler}
                 />
               </div>
-              {stateName === 'edit' &&
-                <div className={classes.container}>
-                  <Textarea
-                    label="Test text"
-                    value={testText}
-                    onChange={this.changeHandler('testText')}
-                  />
-                </div>
-              }
-              {stateName === 'test' &&
+              {status === 'test' &&
                 <div className={classes.container}>
                   <Outlined>
                     <Highlight
-                      parameter={testedParameter}
-                      value={testText}
+                      parameter={test.parameter}
+                      value={test.text}
                     />
                   </Outlined>
                 </div>
               }
-              {stateName === 'show' && result.length > 0 && result.map((element, index) =>
+              {status === 'show' && result.length > 0 && result.map((element, index) =>
                 <div key={index} className={classes.container} >
                   <Outlined>
                     <div dangerouslySetInnerHTML={{__html: element}}></div>
                   </Outlined>
                 </div>
               )}
-              {stateName === 'loading' &&
+              {status === 'loading' &&
                 <div className={classes.container}>
                   <Outlined>
                     <LinearProgress />

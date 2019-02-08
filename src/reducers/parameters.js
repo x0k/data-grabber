@@ -1,3 +1,5 @@
+import ParameterData from '../common/parameterData';
+
 import {
   TOGGLE_FLAG,
   SET_PARAMETER_ITEM,
@@ -7,14 +9,7 @@ import {
   DEL_PARAMETER,
 } from '../actions';
 
-const defaultFlags = {
-  i: true,
-  g: false,
-  m: false,
-  s: false,
-};
-
-const flags = (state = defaultFlags, action) => {
+const flags = (state, action) => {
   switch (action.type) {
   case TOGGLE_FLAG:
     return {
@@ -26,14 +21,7 @@ const flags = (state = defaultFlags, action) => {
   }
 };
 
-const defaultParameter = {
-  name: 'Parameter',
-  pattern: '',
-  item: '',
-  flags: flags()
-};
-
-const parameter = (state = defaultParameter, action) => {
+const parameter = (state = new ParameterData(), action) => {
   switch (action.type) {
   case SET_PARAMETER_NAME:
     return {
@@ -63,7 +51,7 @@ const parameter = (state = defaultParameter, action) => {
 const parameters = (state = [], action) => {
   switch (action.type) {
   case ADD_PARAMETER:
-    return [ ...state, parameter() ];
+    return [ ...state, parameter(undefined, action) ];
   case DEL_PARAMETER:
     return state.filter((el, id) => id !== action.payload);
   case SET_PARAMETER_NAME:

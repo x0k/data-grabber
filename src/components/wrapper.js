@@ -3,7 +3,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
-  collapser: {
+  wrapper: {
     
   },
   collapserDesc: {
@@ -37,7 +37,7 @@ const getEnd = (text) => {
   return text.slice(from, text.length);
 };
 
-export default withStyles(styles)(function Collapser ({ classes, value, key }) {
+export default withStyles(styles)(function Wrapper ({ classes, value, key }) {
   let text;
   if (value.length > 340) {
     const begin = getBegin(value);
@@ -49,7 +49,7 @@ export default withStyles(styles)(function Collapser ({ classes, value, key }) {
     text = value;
   }
   return (
-    <span className={classes.collapser}>
+    <span className={classes.wrapper}>
       {text}
     </span>
   );

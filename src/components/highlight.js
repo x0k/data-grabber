@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Collapser from './collapser';
+import Wrapper from './wrapper';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -45,12 +45,12 @@ const highlight = (value, matches, classes) => new Promise((resolve, reject) => 
     let i = 0;
     for (const m of match.inner) {
       const [a, ...b] = text.split(m.element);
-      const prev = lvl < 1 ? <Collapser key={m.element + i++} value={a} /> : a;
+      const prev = lvl < 1 ? <Wrapper key={m.element + i++} value={a} /> : a;
       value = [ ...value, prev, hl(m, lvl+1) ];
       text = b.join('');
     }
     if (text.length) {
-      value.push(lvl < 1 ? <Collapser key={match.element + '_end'} value={text} /> : text);
+      value.push(lvl < 1 ? <Wrapper key={match.element + '_end'} value={text} /> : text);
     }
     return (
       <span key={match.element} className={classes[`hl-${lvl}`]}>
@@ -83,13 +83,11 @@ class Highlight extends Component {
     const { value, parameter, classes } = this.props;
     const { status, lastRegExp } = this.state;
     const regExp = parameter.pattern + parameter.flagsToString();
-    const onError = ({ error }) => this.setState({ status: error, lastRegExp: regExp });
     if (lastRegExp !== regExp) {
       match(value, parameter)
         .then(matches => highlight(value, matches, classes))
-        .catch(onError)
         .then(status => this.setState({ status, lastRegExp: regExp }))
-        .catch(onError);
+        .catch(({ error }) => this.setState({ status: error, lastRegExp: regExp }));
     }
     return (
       <div>

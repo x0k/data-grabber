@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-/src/assets/testKeys.js
+/src/credentials/testKeys.js
 
 # production
 /build

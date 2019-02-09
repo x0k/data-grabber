@@ -1,6 +1,6 @@
 import { SET_CONTAINER } from '../actions';
 
-const container = (state = '%link%', action) => {
+const container = (state = '', action) => {
   switch (action.type) {
   case SET_CONTAINER:
     return action.payload;

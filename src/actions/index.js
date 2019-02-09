@@ -100,15 +100,14 @@ export function runGraber () {
   };
 }
 
-export function test (id) {
+export function test (parameter) {
   return (dispatch, getState) => {
-    const { api, links, parameters } = getState();
+    const { api, links } = getState();
     if (links.length === 0) {
       dispatch(setResult([ 'No links' ]));
       dispatch(setStatus(status.show));
     } else {
       dispatch(setStatus(status.loading));
-      const parameter = parameters[id];
       const link = links.split('\n')[0];
       return api.fetch(link)
         .then(response => response.result.response.result)

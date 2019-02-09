@@ -22,11 +22,11 @@ class Expression {
 
 function buildGrabber (parameters, buildString) {
   let expressions = parameters.map(parameter => new Expression(parameter));
-  return ({ link, text }) => {
+  return ({ URL, text }) => {
     let values = expressions.reduce((values, exp) => {
       values[exp.name] = exp.apply(text);
       return values;
-    }, { link });
+    }, { URL });
     return buildString.replace(/%(.+?)%/g, (match, name) => values[name]);
   };
 }
@@ -34,6 +34,6 @@ function buildGrabber (parameters, buildString) {
 export async function grab (fetch, links, parameters, itemsContainer) {
   const grabber = buildGrabber(parameters, itemsContainer);
   const result = await Promise.all(links.map(link => fetch(link)))
-    .then(result => result.map((response, id) => ({ link: links[id], text: response.result.response.result })));
+    .then(result => result.map((response, id) => ({ URL: links[id], text: response.result.response.result })));
   return result.map(data => grabber(data));
 }

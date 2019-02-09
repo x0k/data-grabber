@@ -1,5 +1,3 @@
-import ParameterData from '../common/parameterData';
-
 import {
   TOGGLE_FLAG,
   SET_PARAMETER_ITEM,
@@ -21,7 +19,27 @@ const flags = (state, action) => {
   }
 };
 
-const parameter = (state = new ParameterData({}), action) => {
+const createParameter = () => ({
+  name: 'Parameter',
+  pattern: '',
+  item: '',
+  flags: {
+    i: true,
+    g: false,
+    m: false,
+    s: false,
+  },
+  flagsToString () {
+    let result = '';
+    for (let key of Object.keys(this.flags)) {
+      if (this.flags[key])
+        result += key;
+    }
+    return result;
+  }
+});
+
+const parameter = (state = createParameter(), action) => {
   switch (action.type) {
   case SET_PARAMETER_NAME:
     return {

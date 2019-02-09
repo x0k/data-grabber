@@ -11,7 +11,6 @@ import Textarea from './textarea';
 import Parameter from './parameter';
 import Outlined from './outlined';
 import Highlight from './highlight';
-import { setAnchor, setUser } from '../actions';
 
 const styles = {
   root: {
@@ -117,7 +116,7 @@ export default withStyles(styles)(function App ({
                     result.map((element, index) => <div key={index} dangerouslySetInnerHTML={{__html: element}}></div>)
                   }
                   {status === 'test' && <Highlight
-                    parameter={test.parameter}
+                    parameter={parameters[test.parameter]}
                     value={test.text}
                   />}
                   {status === 'loading' && <LinearProgress />}

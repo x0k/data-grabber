@@ -1,5 +1,5 @@
 import GAPI from 'easy-gapi';
-import { data, getRequest } from '../credentials/testKeys';
+import { data, getRequest } from '../credentials/keys';
 
 class API extends GAPI {
 

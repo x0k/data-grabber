@@ -1,3 +1,12 @@
+function flagsToString (flags) {
+  let result = '';
+  for (let key of Object.keys(flags)) {
+    if (flags[key])
+      result += key;
+  }
+  return result;
+}
+
 class Expression {
 
   name;
@@ -7,7 +16,7 @@ class Expression {
   constructor (parameter) {
     this.name = parameter.name;
     this.item = parameter.item;
-    this.expression = new RegExp(parameter.pattern, parameter.flagsToString());
+    this.expression = new RegExp(parameter.pattern, flagsToString(parameter.flags));
   }
 
   apply (text) {

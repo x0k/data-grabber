@@ -28,14 +28,6 @@ const createParameter = () => ({
     g: false,
     m: false,
     s: false,
-  },
-  flagsToString () {
-    let result = '';
-    for (let key of Object.keys(this.flags)) {
-      if (this.flags[key])
-        result += key;
-    }
-    return result;
   }
 });
 

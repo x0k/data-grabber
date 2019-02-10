@@ -4,8 +4,17 @@ import Wrapper from './wrapper';
 
 import { withStyles } from '@material-ui/core/styles';
 
+function flagsToString (flags) {
+  let result = '';
+  for (let key of Object.keys(flags)) {
+    if (flags[key])
+      result += key;
+  }
+  return result;
+}
+
 const match = (value, parameter) => new Promise((resolve, reject) => {
-  const regexp = new RegExp(parameter.pattern, parameter.flagsToString());
+  const regexp = new RegExp(parameter.pattern, flagsToString(parameter.flags));
   let matches = value.match(regexp);
   if (!matches) {
     reject({ error: 'No matches' });
@@ -82,7 +91,7 @@ class Highlight extends Component {
   render () {
     const { value, parameter, classes } = this.props;
     const { status, lastRegExp } = this.state;
-    const regExp = parameter.pattern + parameter.flagsToString();
+    const regExp = parameter.pattern + flagsToString(parameter.flags);
     if (lastRegExp !== regExp) {
       match(value, parameter)
         .then(matches => highlight(value, matches, classes))

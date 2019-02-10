@@ -8,10 +8,12 @@ import user from './user';
 import status from './status';
 import api from './api';
 import anchor from './anchor';
+import modal from './modal';
 
 const redusers = combineReducers({
   api,
   anchor,
+  modal,
   user,
   links,
   parameters,

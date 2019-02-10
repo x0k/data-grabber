@@ -12,6 +12,8 @@ export const CREATE_API = 'CREATE_API';
 
 export const SET_ANCHOR = 'SET_ANCHOR';
 
+export const SET_MODAL = 'SET_MODAL';
+
 export const SET_LINKS = 'SET_LINKS';
 
 export const SET_USER = 'SET_USER';
@@ -36,6 +38,8 @@ export const SET_CONTAINER = 'SET_CONTAINER';
 
 export const SET_STATUS = 'SET_STATUS';
 
+export const SAVE_STATE = 'SAVE_STATE';
+
 export const status = {
   none: 'none',
   loading: 'loading',
@@ -47,9 +51,10 @@ const [ addParameter ] = createActions(simpleAction,
   ADD_PARAMETER
 );
 
-const [ createAPI, setAnchor, setLinks, setUser, delParameter, setTest, setResult, setContainer, setStatus ] = createActions(transferAction,
+const [ createAPI, setAnchor, setModal, setLinks, setUser, delParameter, setTest, setResult, setContainer, setStatus ] = createActions(transferAction,
   CREATE_API,
   SET_ANCHOR,
+  SET_MODAL,
   SET_LINKS,
   SET_USER,
   DEL_PARAMETER,
@@ -67,8 +72,11 @@ const [ setParameterName, setParameterPattern, setParameterItem, toggleFlag ] = 
 );
 
 export {
-  createAPI, setAnchor, setLinks, setUser, setResult, setContainer, setStatus,
-  addParameter, delParameter, setParameterName, setParameterPattern, setParameterItem, toggleFlag
+  createAPI, setAnchor, setModal,
+  setLinks, setUser, setResult,
+  setContainer, setStatus, addParameter,
+  delParameter, setParameterName, setParameterPattern,
+  setParameterItem, toggleFlag
 };
 
 export function authorize () {

@@ -7,6 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 
 import Bar from './bar';
+import FileDialog from './fileDialog';
 import Textarea from './textarea';
 import Parameter from './parameter';
 import Outlined from './outlined';
@@ -29,6 +30,18 @@ const styles = {
   progress: {
     margin: '10 auto'
   }
+};
+
+const save = (data) => () => {
+  const fileName = 'data.json';
+  const file = new Blob([JSON.stringify(data)], {
+    type: 'application/json',
+    name: fileName
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
 };
 
 export default withStyles(styles)(function App ({
@@ -55,10 +68,18 @@ export default withStyles(styles)(function App ({
   parameterPatternHandler,
   parameterItemHandler,
   authorize,
+  modal,
+  openModal,
+  closeModal
 }) {
   if (!api) {
     authorize();
   }
+  const state = {
+    links,
+    parameters,
+    container,
+  };
   return (
     <div className={classes.root}>
       <Bar
@@ -67,6 +88,7 @@ export default withStyles(styles)(function App ({
         authHandler={authHandler}
         menuHandler={menuHandler}
       />
+      <FileDialog open={modal} onClose={closeModal} />
       <Grid container>
         <Grid item xs={12} lg={6}>
           <div className={classes.wrapper}>
@@ -83,6 +105,9 @@ export default withStyles(styles)(function App ({
               </Button>
               <Button variant="outlined" className={classes.button} onClick={parameterAddHandler}>
                 Add
+              </Button>
+              <Button variant="outlined" className={classes.button} onClick={openModal}>
+                Save
               </Button>
             </div>
             {parameters.map((parameter, index) => (

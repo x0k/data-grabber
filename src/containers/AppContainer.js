@@ -4,6 +4,7 @@ import App from '../components/app';
 
 import {
   setAnchor,
+  setModal,
   authorize,
   setLinks,
   setContainer,
@@ -19,7 +20,7 @@ import {
 
 const stateToProps = (state) => state;
 
-const dispatchToProps = (dispatch, props) => ({
+const dispatchToProps = (dispatch) => ({
   menuHandler: (action) => (event) => dispatch(setAnchor(action ? event.currentTarget : null)),
   authHandler: () => dispatch(authorize()),
   linksChangeHandler: (event) => dispatch(setLinks(event.target.value)),
@@ -32,7 +33,9 @@ const dispatchToProps = (dispatch, props) => ({
   parameterItemHandler: (id) => (event) => dispatch(setParameterItem(id, event.target.value)),
   parameterCheckHandler: (id) => (name) => (event, value) => dispatch(toggleFlag(id, name)),
   parameterTestHandler: (id) => () => dispatch(test(id)),
-  authorize: () => dispatch(authorize())
+  authorize: () => dispatch(authorize()),
+  openModal: () => dispatch(setModal(true)),
+  closeModal: () => dispatch(setModal(false)),
 });
 
 const AppContainer = connect(

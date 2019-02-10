@@ -1,11 +1,13 @@
 {
-  "main.js": "/data-grabber/static/js/main.3f2b13ee.chunk.js",
-  "main.js.map": "/data-grabber/static/js/main.3f2b13ee.chunk.js.map",
-  "static/js/1.a8034f52.chunk.js": "/data-grabber/static/js/1.a8034f52.chunk.js",
-  "static/js/1.a8034f52.chunk.js.map": "/data-grabber/static/js/1.a8034f52.chunk.js.map",
+  "main.js": "/data-grabber/static/js/main.83672de3.chunk.js",
+  "main.js.map": "/data-grabber/static/js/main.83672de3.chunk.js.map",
+  "static/js/1.b4a224ce.chunk.js": "/data-grabber/static/js/1.b4a224ce.chunk.js",
+  "static/js/1.b4a224ce.chunk.js.map": "/data-grabber/static/js/1.b4a224ce.chunk.js.map",
   "runtime~main.js": "/data-grabber/static/js/runtime~main.a9fbfa2a.js",
   "runtime~main.js.map": "/data-grabber/static/js/runtime~main.a9fbfa2a.js.map",
+  "static/media/local.svg": "/data-grabber/static/media/local.4d7cf21d.svg",
+  "static/media/google-drive.svg": "/data-grabber/static/media/google-drive.c28687d4.svg",
   "index.html": "/data-grabber/index.html",
-  "precache-manifest.99d5a2979dde7879aa4a5aa8f129c923.js": "/data-grabber/precache-manifest.99d5a2979dde7879aa4a5aa8f129c923.js",
+  "precache-manifest.8a4a19da68bbea908e5b2742a13e8beb.js": "/data-grabber/precache-manifest.8a4a19da68bbea908e5b2742a13e8beb.js",
   "service-worker.js": "/data-grabber/service-worker.js"
 }

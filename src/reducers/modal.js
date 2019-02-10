@@ -1,12 +1,23 @@
-import { SET_MODAL } from '../actions';
+import { SET_MODAL, SET_MODAL_ACTIONS } from '../actions';
 
-const anchor = (state = false, action) => {
+const modal = (state = { open: false }, action) => {
   switch (action.type) {
   case SET_MODAL:
-    return action.payload;
+    return {
+      ...state,
+      open: action.payload,
+    };
+  case SET_MODAL_ACTIONS: {
+    const { onLocal, onDrive } = action;
+    return {
+      ...state,
+      onLocal,
+      onDrive
+    };
+  }
   default:
     return state;
   }
 };
 
-export default anchor;
+export default modal;

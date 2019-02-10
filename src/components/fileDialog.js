@@ -33,7 +33,7 @@ function FileDialog ({ classes, open, onClose, onLocalClick, onDriveClick }) {
       onClose={onClose}
     >
       <Grid container className={classes.paper}>
-        <Grid item xs={6} onClick={onLocalClick}>
+        <Grid item xs={6} onClick={onLocalClick} style={{ filter: onLocalClick ? 'none' : 'grayscale(100%)' }}>
           <img
             className={classes.icon}
             src={local}
@@ -43,7 +43,7 @@ function FileDialog ({ classes, open, onClose, onLocalClick, onDriveClick }) {
           Local
           </Typography>
         </Grid>
-        <Grid item xs={6} onClick={onDriveClick}>
+        <Grid item xs={6} onClick={onDriveClick} style={{ filter: onDriveClick ? 'none' : 'grayscale(100%)' }}>
           <img
             className={classes.icon}
             src={drive}

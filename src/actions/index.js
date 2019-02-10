@@ -4,15 +4,19 @@ const simpleAction = (type) => () => ({ type });
 
 const transferAction = (type) => (payload) => ({ type, payload });
 
-const indexedAction = (type) =>  (id, payload) => ({ type, id, payload, });
+const indexedAction = (type) => (id, payload) => ({ type, id, payload, });
 
 const createActions = (builder, ...actions) => actions.map(action => builder(action));
 
 export const CREATE_API = 'CREATE_API';
 
+export const LOAD_STATE = 'LOAD_STATE';
+
 export const SET_ANCHOR = 'SET_ANCHOR';
 
 export const SET_MODAL = 'SET_MODAL';
+
+export const SET_MODAL_ACTIONS = 'SET_MODAL_ACTIONS';
 
 export const SET_LINKS = 'SET_LINKS';
 
@@ -51,7 +55,8 @@ const [ addParameter ] = createActions(simpleAction,
   ADD_PARAMETER
 );
 
-const [ createAPI, setAnchor, setModal, setLinks, setUser, delParameter, setTest, setResult, setContainer, setStatus ] = createActions(transferAction,
+const [ loadState, createAPI, setAnchor, setModal, setLinks, setUser, delParameter, setTest, setResult, setContainer, setStatus ] = createActions(transferAction,
+  LOAD_STATE,
   CREATE_API,
   SET_ANCHOR,
   SET_MODAL,
@@ -72,12 +77,29 @@ const [ setParameterName, setParameterPattern, setParameterItem, toggleFlag ] = 
 );
 
 export {
-  createAPI, setAnchor, setModal,
-  setLinks, setUser, setResult,
-  setContainer, setStatus, addParameter,
-  delParameter, setParameterName, setParameterPattern,
-  setParameterItem, toggleFlag
+  loadState,
+  createAPI,
+  setAnchor,
+  setModal,
+  setLinks,
+  setUser,
+  setResult,
+  setContainer,
+  setStatus,
+  addParameter,
+  delParameter,
+  setParameterName,
+  setParameterPattern,
+  setParameterItem,
+  toggleFlag
 };
+
+export function setModalActions (onLocal, onDrive) {
+  return {
+    type: SET_MODAL_ACTIONS,
+    onLocal, onDrive
+  };
+}
 
 export function authorize () {
   return (dispatch, getState) => {

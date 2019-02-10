@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import App from '../components/app';
 
 import {
+  loadState,
   setAnchor,
   setModal,
   authorize,
@@ -15,7 +16,8 @@ import {
   setParameterItem,
   delParameter,
   addParameter,
-  test
+  test,
+  setModalActions
 } from '../actions';
 
 const stateToProps = (state) => state;
@@ -34,8 +36,12 @@ const dispatchToProps = (dispatch) => ({
   parameterCheckHandler: (id) => (name) => (event, value) => dispatch(toggleFlag(id, name)),
   parameterTestHandler: (id) => () => dispatch(test(id)),
   authorize: () => dispatch(authorize()),
-  openModal: () => dispatch(setModal(true)),
-  closeModal: () => dispatch(setModal(false)),
+  openDialog: (onLocal, onDrive) => () => {
+    dispatch(setModal(true));
+    dispatch(setModalActions(onLocal, onDrive));
+  },
+  closeDialog: () => dispatch(setModal(false)),
+  loadData: (data) => dispatch(loadState(data)),
 });
 
 const AppContainer = connect(

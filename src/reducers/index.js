@@ -10,6 +10,8 @@ import api from './api';
 import anchor from './anchor';
 import modal from './modal';
 
+import { LOAD_STATE } from '../actions';
+
 const redusers = combineReducers({
   api,
   anchor,
@@ -23,4 +25,11 @@ const redusers = combineReducers({
   status
 });
 
-export default redusers;
+export default (state, action) => {
+  switch (action.type) {
+  case LOAD_STATE:
+    return { ...state, ...action.payload };
+  default:
+    return redusers(state, action);
+  }
+};
